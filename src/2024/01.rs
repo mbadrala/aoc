@@ -4,21 +4,20 @@ use std::io::{self, BufRead};
 use std::path::Path;
 
 fn main() {
-    let mut a: Vec<i32> = Vec::new();
-    let mut b: Vec<i32> = Vec::new();
+    let (mut a, mut b): (Vec<i32>, Vec<i32>) = read_lines("./src/2024/01.txt")
+        .expect("File read error")
+        .map(|line| {
+            let line = line.expect("Line read error");
+            let nums: Vec<i32> = line
+                .split_whitespace()
+                .map(|s| s.parse().expect("Parse error"))
+                .collect();
+            (nums[0], nums[1])
+        })
+        .unzip();
 
-    if let Ok(lines) = read_lines("./src/2024/01.txt") {
-        for line in lines.map_while(Result::ok) {
-            let numbers: Vec<&str> = line.split_whitespace().collect();
-            let num1: i32 = numbers[0].parse().unwrap();
-            let num2: i32 = numbers[1].parse().unwrap();
-
-            a.push(num1);
-            b.push(num2);
-        }
-        a.sort();
-        b.sort();
-    }
+    a.sort_unstable();
+    b.sort_unstable();
 
     do_part_one(&a, &b);
     do_part_two(&a, &b);
@@ -34,16 +33,10 @@ fn do_part_one(a: &[i32], b: &[i32]) {
 }
 
 fn do_part_two(a: &[i32], b: &[i32]) {
-    let mut result: i32 = 0;
-
-    for i in a {
-        for j in b {
-            if i == j {
-                result += i;
-            }
-        }
-    }
-
+    let result: i32 = a
+        .iter()
+        .flat_map(|&i| b.iter().filter(move |&&j| i == j).map(|&x| x))
+        .sum();
     println!("Day 01 part two result: {}", result);
 }
 
