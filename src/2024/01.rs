@@ -6,7 +6,6 @@ use std::path::Path;
 fn main() {
     let mut a: Vec<i32> = Vec::new();
     let mut b: Vec<i32> = Vec::new();
-    let mut len: usize = 0;
 
     if let Ok(lines) = read_lines("./src/2024/01.txt") {
         for line in lines.map_while(Result::ok) {
@@ -16,34 +15,31 @@ fn main() {
 
             a.push(num1);
             b.push(num2);
-
-            len += 1;
         }
         a.sort();
         b.sort();
     }
 
-    do_part_one(&a, &b, len);
-    do_part_two(a, b, len);
+    do_part_one(&a, &b);
+    do_part_two(&a, &b);
 }
 
-fn do_part_one(a: &Vec<i32>, b: &Vec<i32>, len: usize) {
-    let mut result: i32 = 0;
-
-    for i in 0..len {
-        result += (a[i] - b[i]).abs();
-    }
+fn do_part_one(a: &[i32], b: &[i32]) {
+    let result: i32 = a.iter()
+        .zip(b.iter())
+        .map(|(x, y)| (x - y).abs())
+        .sum();
 
     println!("Day 01 part one result: {}", result);
 }
 
-fn do_part_two(a: Vec<i32>, b: Vec<i32>, len: usize) {
+fn do_part_two(a: &[i32], b: &[i32]) {
     let mut result: i32 = 0;
 
-    for i in 0..len {
-        for j in 0..len {
-            if a[i] == b[j] {
-                result += a[i];
+    for i in a {
+        for j in b {
+            if i == j {
+                result += i;
             }
         }
     }
