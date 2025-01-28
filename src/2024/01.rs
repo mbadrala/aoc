@@ -1,10 +1,8 @@
 // --- Day 1: Historian Hysteria ---
-use std::fs::File;
-use std::io::{self, BufRead};
-use std::path::Path;
+mod utils;
 
 fn main() {
-    let (mut a, mut b): (Vec<i32>, Vec<i32>) = read_lines("./src/2024/01.txt")
+    let (mut a, mut b): (Vec<i32>, Vec<i32>) = utils::read_lines("./src/2024/01.txt")
         .expect("File read error")
         .map(|line| {
             let line = line.expect("Line read error");
@@ -40,10 +38,3 @@ fn do_part_two(a: &[i32], b: &[i32]) {
     println!("Day 01 part two result: {}", result);
 }
 
-fn read_lines<P>(filename: P) -> io::Result<io::Lines<io::BufReader<File>>>
-where
-    P: AsRef<Path>,
-{
-    let file = File::open(filename)?;
-    Ok(io::BufReader::new(file).lines())
-}
